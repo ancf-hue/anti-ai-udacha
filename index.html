@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Анти ИИ — Удача: Тест на Везение | Звуковой салют</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            background-attachment: fixed;
+            color: #f8fafc;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 650px;
+            width: 100%;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+        .logo-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+        }
+        h1 { 
+            color: #f8fafc; 
+            margin: 0; 
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { 
+            color: #cbd5e1; 
+            font-size: 1rem; 
+            margin-top: 10px; 
+            margin-bottom: 25px;
+        }
+        .rules-text {
+            font-size: 1rem;
+            color: #e2e8f0;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .card-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            margin: 40px 0;
+        }
+        .card {
+            width: 140px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            user-select: none;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .card:hover {
+            border-color: rgba(56, 189, 248, 0.8);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(56, 189, 248, 0.25);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .card .card-icon {
+            font-size: 2.8rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            transition: transform 0.2s ease;
+            pointer-events: none;
+        }
+        .card span { pointer-events: none; }
+        .card:hover .card-icon { transform: scale(1.1); }
+        
+        .btn-container {
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.05rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            transition: all 0.2s ease;
+        }
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+            filter: brightness(1.1);
+        }
+        .btn-reset { 
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+        }
+        .btn-reset:hover {
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.6);
+        }
+        #result {
+            margin-top: 15px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .status-text {
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.3);
+            display: inline-block;
+        }
+        .status-lucky { color: #4ade80; text-shadow: 0 0 10px rgba(74, 222, 128, 0.4); }
+        .status-robot { color: #f87171; text-shadow: 0 0 10px rgba(248, 113, 113, 0.4); }
+        
+        .final-verdict {
+            background: rgba(15, 23, 42, 0.7);
+            border: 2px solid #38bdf8;
+            padding: 25px;
+            border-radius: 18px;
+            font-size: 1.2rem;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+            animation: pulse-border 2s infinite alternate;
+            width: 100%;
+            line-height: 1.5;
+        }
+        .final-verdict.fail {
+            border-color: #f87171;
+            box-shadow: 0 0 30px rgba(248, 113, 113, 0.3);
+            animation: pulse-border-fail 2s infinite alternate;
+        }
+        .final-verdict.jackpot {
+            border-color: #4ade80;
+            box-shadow: 0 0 35px rgba(74, 222, 128, 0.5);
+            animation: pulse-border-win 1.5s infinite alternate;
+        }
+        
+        @keyframes pulse-border {
+            from { box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+            to { box-shadow: 0 0 30px rgba(56, 189, 248, 0.5); }
+        }
+        @keyframes pulse-border-fail {
+            from { box-shadow: 0 0 15px rgba(248, 113, 113, 0.2); }
+            to { box-shadow: 0 0 30px rgba(248, 113, 113, 0.5); }
+        }
+        @keyframes pulse-border-win {
+            from { box-shadow: 0 0 20px rgba(74, 222, 128, 0.3); }
+            to { box-shadow: 0 0 40px rgba(74, 222, 128, 0.7); }
+        }
+        
+        /* === КОНФЕТТИ / САЛЮТ === */
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 10000;
+            animation: confetti-fall linear forwards;
+        }
+        @keyframes flash-pop {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+        .firework-flash {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, gold, #ffaa44);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10001;
+            animation: flash-pop 0.4s ease-out forwards;
+        }
+        
+        .stats {
+            margin-top: 35px;
+            font-size: 1.1rem;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+        .highlight { color: #ffffff; font-weight: 800; font-size: 1.2rem; }
+
+        /* Блок поддержки */
+        .support-section {
+            margin-top: 45px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .support-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #38bdf8, #c084fc, #38bdf8);
+        }
+        .support-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .support-heart {
+            font-size: 2rem;
+            animation: heartBeat 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .support-text {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .support-phone {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #38bdf8;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .copy-btn {
+            background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+        }
+        .copy-message {
+            font-size: 0.8rem;
+            color: #4ade80;
+            margin-left: 10px;
+            display: inline-block;
+        }
+        .support-note {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin: 15px 0;
+        }
+        .support-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            word-break: break-all;
+        }
+        .support-link:hover {
+            color: #c084fc;
+            text-shadow: 0 0 8px rgba(192, 132, 252, 0.5);
+        }
+        .support-thanks {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #f8fafc;
+        }
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            margin: 20px 0 0 0;
+        }
+        @media (max-width: 600px) {
+            .card { width: 110px; height: 170px; font-size: 1rem; }
+            .card .card-icon { font-size: 2.2rem; }
+            h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="logo-header">
+        <img src="favicon.ico" alt="Лого" class="logo-img" onerror="this.style.display='none'">
+        <h1>Проект «Анти ИИ — Удача»</h1>
+    </div>
+    <div class="subtitle">ИИ рассчитывает. Человек рискует. Пройди цикл из 10 попыток.</div>
+    
+    <p class="rules-text"><strong>Задание:</strong> Отключи логику. Твоя цель — пройти проверку интуиции 10 раз подряд. Алгоритмы пытаются просчитать тебя, доверься внутреннему голосу! <span style="color:#FFD966;">⭐ Угадал кубок 🏆 — весёлая музыка + конфетти!</span></p>
+
+    <div class="card-container">
+        <div class="card" onclick="checkCard(0)"><div class="card-icon">?</div><span></span></div>
+        <div class="card" onclick="checkCard(1)"><div class="card-icon">?</div><span></span></div>
+        <div class="card" onclick="checkCard(2)"><div class="card-icon">?</div><span></span></div>
+    </div>
+
+    <div id="result"></div>
+    
+    <div class="btn-container">
+        <button class="btn" id="nextBtn" onclick="nextAttempt()" style="display:none;">Следующая попытка</button>
+        <button class="btn btn-reset" id="startOverBtn" onclick="startNewCycle()" style="display:none;">Тестировать заново</button>
+    </div>
+
+    <div class="stats">
+        Прогресс: <span id="total" class="highlight">0</span> из 10 | 
+        Удачных совпадений: <span id="luckyCount" class="highlight">0</span>
+    </div>
+
+    <!-- Блок поддержки -->
+    <div class="support-section">
+        <div class="support-title">
+            🤝 ПОДДЕРЖАТЬ ПРОЕКТ
+            <div class="support-heart">💙</div>
+        </div>
+        <div class="support-text">
+            Приложение бесплатное. Было и останется.<br>
+            Если проект помог вам или вашим близким — можете поддержать разработку добровольным переводом.
+        </div>
+        <a href="tel:+79202275676" class="support-phone">📱 8-920-227-56-76</a>
+        <button class="copy-btn" onclick="copyPhoneNumber()">📋 Копировать номер</button>
+        <span id="copyMsg" class="copy-message"></span>
+        <div class="support-note">✅ Деньги придут мгновенно. Без комиссии. Безопасно.</div>
+        <div class="support-thanks">❤️ Спасибо за поддержку!</div>
+        <hr>
+        <a href="https://ancf-hue.github.io/" target="_blank" rel="noopener noreferrer" class="support-link">
+            🌟 👉 https://ancf-hue.github.io/<br>
+            Каталог бесплатных офлайн-приложений Anti-AI Shield
+        </a>
+    </div>
+</div>
+
+<script>
+    // ========== 🎙️ ФАЙЛЫ ОЗВУЧКИ РЕЗУЛЬТАТОВ ==========
+    const resultAudioFiles = {
+        0: 'result0.mp3',
+        1: 'result1.mp3',
+        2: 'result2.mp3',
+        3: 'result3.mp3',
+        4: 'result4.mp3',
+        5: 'result5.mp3',
+        6: 'result6.mp3',
+        7: 'result7.mp3',
+        8: 'result8.mp3',
+        9: 'result9.mp3',
+        10: 'result9.mp3'
+    };
+
+    function playResultVoiceover(score) {
+        try {
+            const audioFile = resultAudioFiles[score];
+            if (!audioFile) return;
+            const audio = new Audio(audioFile);
+            audio.preload = 'auto';
+            audio.volume = 0.9;
+            audio.play().catch(e => {
+                console.log('🎙️ Озвучка не воспроизведена (возможно, файл не найден):', e);
+            });
+        } catch(e) {
+            console.log('🎙️ Ошибка при воспроизведении озвучки:', e);
+        }
+    }
+
+    // ========== 2. ЗВУКОВЫЕ ЭФФЕКТЫ (Web Audio API) ==========
+    let audioCtx = null;
+    let happyMelodyInterval = null;
+    let isPlayingHappy = false;
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    function playMissSound() {
+        try {
+            const ctx = initAudio();
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.value = 620;
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+            osc.start(now);
+            osc.stop(now + 0.45);
+        } catch(e) { console.log("Audio error:", e); }
+    }
+
+    function playHappyCupMelody(durationSec = 1.8) {
+        if (isPlayingHappy) return;
+        try {
+            const ctx = initAudio();
+            isPlayingHappy = true;
+            const startTime = ctx.currentTime;
+            const notes = [523.25, 587.33, 659.25, 523.25, 783.99];
+            const durations = [0.2, 0.2, 0.25, 0.2, 0.35];
+            let time = startTime;
+            for (let i = 0; i < notes.length; i++) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'square';
+                osc.frequency.value = notes[i];
+                gain.gain.setValueAtTime(0.2, time);
+                gain.gain.exponentialRampToValueAtTime(0.0001, time + durations[i]);
+                osc.start(time);
+                osc.stop(time + durations[i]);
+                time += durations[i];
+            }
+            setTimeout(() => {
+                if (!isPlayingHappy) return;
+                const ctx2 = initAudio();
+                const t = ctx2.currentTime;
+                const chord = [659.25, 783.99, 987.77];
+                chord.forEach((freq, idx) => {
+                    const osc2 = ctx2.createOscillator();
+                    const gain2 = ctx2.createGain();
+                    osc2.connect(gain2);
+                    gain2.connect(ctx2.destination);
+                    osc2.type = 'sine';
+                    osc2.frequency.value = freq;
+                    gain2.gain.setValueAtTime(0.12, t + idx*0.08);
+                    gain2.gain.exponentialRampToValueAtTime(0.0001, t + idx*0.08 + 0.25);
+                    osc2.start(t + idx*0.08);
+                    osc2.stop(t + idx*0.08 + 0.25);
+                });
+            }, 350);
+            setTimeout(() => { isPlayingHappy = false; }, durationSec * 1000 + 400);
+        } catch(e) { console.log("happy music error", e); isPlayingHappy = false; }
+    }
+    
+    function launchCelebrationWithMusic(intensity = 1) {
+        playHappyCupMelody(2.0);
+        launchFireworkCelebration(intensity);
+    }
+    
+    function launchFireworkCelebration(intensity = 1) {
+        let baseCount = 55;
+        if (intensity === 2) baseCount = 100;
+        else if (intensity === 1.5) baseCount = 75;
+        const colors = ['#38bdf8', '#c084fc', '#4ade80', '#fbbf24', '#f87171', '#ff6ac4', '#ffd966', '#ff9f4a'];
+        for (let f = 0; f < 14; f++) {
+            setTimeout(() => {
+                const flash = document.createElement('div');
+                flash.className = 'firework-flash';
+                flash.style.left = Math.random() * 100 + 'vw';
+                flash.style.top = Math.random() * 60 + 10 + '%';
+                document.body.appendChild(flash);
+                setTimeout(() => flash.remove(), 500);
+            }, f * 35);
+        }
+        for (let i = 0; i < baseCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            const colorChoice = colors[Math.floor(Math.random() * colors.length)];
+            const sizeW = 6 + Math.random() * 12;
+            const sizeH = 6 + Math.random() * 12;
+            confetti.style.cssText = `
+                background: ${colorChoice};
+                left: ${Math.random() * 100}vw;
+                top: -20px;
+                width: ${sizeW}px;
+                height: ${sizeH}px;
+                border-radius: ${Math.random() > 0.6 ? '50%' : '3px'};
+                opacity: 0.9;
+                animation-duration: ${1.8 + Math.random() * 2.5}s;
+                animation-delay: ${Math.random() * 0.4}s;
+                box-shadow: 0 0 4px rgba(255,255,200,0.6);
+            `;
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 4200);
+        }
+    }
+    
+    function celebrateCupWin() {
+        launchCelebrationWithMusic(1);
+    }
+    
+    function finalCelebration(level) {
+        if (level === 'super') {
+            playHappyCupMelody(2.5);
+            launchFireworkCelebration(2);
+        } else if (level === 'high') {
+            playHappyCupMelody(1.8);
+            launchFireworkCelebration(1.5);
+        } else if (level === 'medium') {
+            playHappyCupMelody(1.2);
+            launchFireworkCelebration(0.8);
+        }
+    }
+
+    // --- Игровая логика ---
+    let totalAttempts = 0;
+    let luckyAttempts = 0;
+    let systemLuckyIndex = Math.floor(Math.random() * 3);
+    let canPlay = true;
+
+    function checkCard(userIndex) {
+        if (!canPlay) return;
+        canPlay = false;
+        
+        const cards = document.querySelectorAll('.card');
+        totalAttempts++;
+        
+        cards.forEach((card, index) => {
+            const iconDiv = card.querySelector('.card-icon');
+            const textSpan = card.querySelector('span');
+            if (index === systemLuckyIndex) {
+                iconDiv.innerHTML = '🏆';
+                if (textSpan) textSpan.innerHTML = 'УДАЧА';
+                card.style.border = "2px solid #4ade80";
+                card.style.background = "rgba(74, 222, 128, 0.2)";
+                card.style.boxShadow = "0 0 20px rgba(74, 222, 128, 0.4)";
+                card.style.color = "#4ade80";
+            } else {
+                iconDiv.innerHTML = '🤖';
+                if (textSpan) textSpan.innerHTML = 'ИИ-РАСЧЕТ';
+                card.style.border = "2px solid #f87171";
+                card.style.background = "rgba(248, 113, 113, 0.15)";
+                card.style.boxShadow = "0 0 15px rgba(248, 113, 113, 0.2)";
+                card.style.color = "#f87171";
+            }
+        });
+        
+        const resultDiv = document.getElementById('result');
+        const isWin = (userIndex === systemLuckyIndex);
+        
+        if (isWin) {
+            luckyAttempts++;
+            celebrateCupWin();
+            resultDiv.innerHTML = "<span class='status-text status-lucky'>🎉🏆 ПОБЕДА! Весёлый салют! Интуиция бьёт ИИ! 🎉✨</span>";
+        } else {
+            playMissSound();
+            resultDiv.innerHTML = "<span class='status-text status-robot'>💥 Промах. Короткий сигнал. ИИ просчитал этот шаг.</span>";
+        }
+        
+        document.getElementById('total').innerText = totalAttempts;
+        document.getElementById('luckyCount').innerText = luckyAttempts;
+        
+        if (totalAttempts >= 10) {
+            showFinalVerdict();
+        } else {
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+    }
+    
+    function nextAttempt() {
+        systemLuckyIndex = Math.floor(Math.random() * 3);
+        canPlay = true;
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            const iconDiv = card.querySelector('.card-icon');
+            const textSpan = card.querySelector('span');
+            if (iconDiv) iconDiv.innerHTML = '?';
+            if (textSpan) textSpan.innerHTML = '';
+            card.style.border = "1px solid rgba(255, 255, 255, 0.2)";
+            card.style.background = "rgba(255, 255, 255, 0.08)";
+            card.style.color = "#f8fafc";
+            card.style.boxShadow = "0 10px 25px rgba(0,0,0,0.2)";
+        });
+        document.getElementById('result').innerHTML = "";
+        document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function showFinalVerdict() {
+        const resultDiv = document.getElementById('result');
+        let verdictText = "";
+        let borderClass = "";
+        let finalFirework = null;
+        
+        if (luckyAttempts === 0) {
+            borderClass = "fail";
+            verdictText = "🤖 Результат: 0 из 10<br><strong style='color:#f87171;'>Абсолютный неудачник.</strong><br>Твое мышление полностью оцифровано и предсказуемо для ИИ. Срочно переходи на спонтанные действия!";
+        } else if (luckyAttempts === 1) {
+            verdictText = "📊 Результат: 1 из 10<br><strong style='color:#fca5a5;'>Низкий уровень везения.</strong><br>Ты слишком сильно полагаешься на стандартную логику. Алгоритмы легко тебя читают.";
+        } else if (luckyAttempts === 2) {
+            verdictText = "📊 Результат: 2 из 10<br><strong style='color:#fca5a5;'>Низкий уровень везения.</strong><br>Ты слишком сильно полагаешься на стандартную логику. Алгоритмы легко тебя читают.";
+        } else if (luckyAttempts === 3) {
+            verdictText = "📊 Результат: 3 из 10<br><strong style='color:#fca5a5;'>Низкий уровень везения.</strong><br>Ты слишком сильно полагаешься на стандартную логику. Алгоритмы легко тебя читают.";
+        } else if (luckyAttempts === 4) {
+            verdictText = "⚡ Результат: 4 из 10<br><strong style='color:#fef08a;'>Средний человеческий уровень.</strong><br>Баланс между холодным расчетом и случайным везением соблюден.";
+        } else if (luckyAttempts === 5) {
+            verdictText = "⚡ Результат: 5 из 10<br><strong style='color:#fef08a;'>Средний человеческий уровень.</strong><br>Баланс между холодным расчетом и случайным везением соблюден.";
+        } else if (luckyAttempts === 6) {
+            verdictText = "⚡ Результат: 6 из 10<br><strong style='color:#fef08a;'>Средний человеческий уровень.</strong><br>Баланс между холодным расчетом и случайным везением соблюден.";
+        } else if (luckyAttempts === 7) {
+            borderClass = "";
+            verdictText = "🌟 Результат: 7 из 10<br><strong style='color:#4ade80;'>Высокий уровень удачи!</strong><br>Ты обладаешь мощной нелинейной интуицией. ИИ бессилен против твоих решений.";
+            finalFirework = 'high';
+        } else if (luckyAttempts === 8) {
+            borderClass = "";
+            verdictText = "🌟 Результат: 8 из 10<br><strong style='color:#4ade80;'>Высокий уровень удачи!</strong><br>Ты обладаешь мощной нелинейной интуицией. ИИ бессилен против твоих решений.";
+            finalFirework = 'high';
+        } else if (luckyAttempts === 9) {
+            borderClass = "";
+            verdictText = "🌟 Результат: 9 из 10<br><strong style='color:#4ade80;'>Высокий уровень удачи!</strong><br>Ты обладаешь мощной нелинейной интуицией. ИИ бессилен против твоих решений.";
+            finalFirework = 'high';
+        } else if (luckyAttempts === 10) {
+            borderClass = "jackpot";
+            verdictText = "🏆 Результат: 10 из 10<br><strong style='color:#4ade80;'>СУПЕР ВЕЗУНЧИК!</strong><br>Абсолютный барьер для искусственного интеллекта. Твоя удача феноменальна, ты полностью ломаешь систему!";
+            finalFirework = 'super';
+        }
+        
+        setTimeout(() => {
+            resultDiv.innerHTML = `<div class="final-verdict ${borderClass}">${verdictText}</div>`;
+        }, 300);
+        
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('startOverBtn').style.display = 'inline-block';
+        
+        if (finalFirework === 'high') {
+            setTimeout(() => finalCelebration('high'), 500);
+        } else if (finalFirework === 'super') {
+            setTimeout(() => finalCelebration('super'), 500);
+        } else if (luckyAttempts >= 4 && luckyAttempts <= 6) {
+            setTimeout(() => finalCelebration('medium'), 550);
+        }
+        
+        // === 🎙️ ВОСПРОИЗВЕСТИ ОЗВУЧКУ РЕЗУЛЬТАТА ===
+        setTimeout(() => {
+            playResultVoiceover(luckyAttempts);
+        }, 600);
+    }
+    
+    function startNewCycle() {
+        totalAttempts = 0;
+        luckyAttempts = 0;
+        systemLuckyIndex = Math.floor(Math.random() * 3);
+        canPlay = true;
+        document.getElementById('total').innerText = "0";
+        document.getElementById('luckyCount').innerText = "0";
+        document.getElementById('startOverBtn').style.display = 'none';
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            const iconDiv = card.querySelector('.card-icon');
+            const textSpan = card.querySelector('span');
+            if (iconDiv) iconDiv.innerHTML = '?';
+            if (textSpan) textSpan.innerHTML = '';
+            card.style.border = "1px solid rgba(255, 255, 255, 0.2)";
+            card.style.background = "rgba(255, 255, 255, 0.08)";
+            card.style.color = "#f8fafc";
+            card.style.boxShadow = "0 10px 25px rgba(0,0,0,0.2)";
+        });
+        document.getElementById('result').innerHTML = "";
+        document.getElementById('nextBtn').style.display = 'none';
+        document.querySelectorAll('.confetti, .firework-flash').forEach(el => el.remove());
+        if (isPlayingHappy) isPlayingHappy = false;
+    }
+    
+    function copyPhoneNumber() {
+        const phoneNumber = "8-920-227-56-76";
+        navigator.clipboard.writeText(phoneNumber).then(() => {
+            const copyMsg = document.getElementById('copyMsg');
+            copyMsg.textContent = '✅ Скопировано!';
+            setTimeout(() => { copyMsg.textContent = ''; }, 2000);
+        }).catch(() => {
+            const copyMsg = document.getElementById('copyMsg');
+            copyMsg.textContent = '❌ Ошибка копирования';
+            setTimeout(() => { copyMsg.textContent = ''; }, 2000);
+        });
+    }
+    
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const style = document.createElement('style');
+        style.textContent = `*, *::before, *::after { animation-duration: 0.01ms !important; }`;
+        document.head.appendChild(style);
+    }
+    
+    function enableAudioOnFirstClick() {
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        document.querySelectorAll('.card').forEach(card => {
+            card.removeEventListener('click', enableAudioOnFirstClick);
+        });
+    }
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', enableAudioOnFirstClick);
+    });
+</script>
+</body>
+</html>
